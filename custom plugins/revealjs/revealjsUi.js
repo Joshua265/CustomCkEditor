@@ -1,18 +1,16 @@
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
+import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
+import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
 
 export default class RevealjsUi extends Plugin {
   init() {
-    console.log('RevealjsUi#init() got called');
-
     const editor = this.editor;
     const t = editor.t;
 
     // The "revealJS" button must be registered among the UI components of the editor
     // to be displayed in the toolbar.
-    editor.ui.componentFactory.add('revealJS', (locale) => {
+    editor.ui.componentFactory.add("revealJS", (locale) => {
       // The state of the button will be bound to the widget command.
-      const command = editor.commands.get('insertRevealjs');
+      const command = editor.commands.get("insertRevealjs");
 
       // The button will be an instance of ButtonView.
       const buttonView = new ButtonView(locale);
@@ -20,43 +18,18 @@ export default class RevealjsUi extends Plugin {
       buttonView.set({
         // The t() function helps localize the editor. All strings enclosed in t() can be
         // translated and change when the language of the editor changes.
-        label: t('Reveal.js'),
+        label: t("Reveal.js"),
         withText: true,
-        tooltip: true
+        tooltip: true,
       });
 
       // Bind the state of the button to the command.
-      buttonView.bind('isOn', 'isEnabled').to(command, 'value', 'isEnabled');
+      buttonView.bind("isOn", "isEnabled").to(command, "value", "isEnabled");
 
       // Execute the command when the button is clicked (executed).
-      this.listenTo(buttonView, 'execute', () =>
-        editor.execute('insertRevealjs')
+      this.listenTo(buttonView, "execute", () =>
+        editor.execute("insertRevealjs")
       );
-
-      return buttonView;
-    });
-
-    // add slide
-    editor.ui.componentFactory.add('addSlide', (locale) => {
-      // The state of the button will be bound to the widget command.
-      const command = editor.commands.get('addSlide');
-
-      // The button will be an instance of ButtonView.
-      const buttonView = new ButtonView(locale);
-
-      buttonView.set({
-        // The t() function helps localize the editor. All strings enclosed in t() can be
-        // translated and change when the language of the editor changes.
-        label: t('Add Slide'),
-        withText: true,
-        tooltip: true
-      });
-
-      // Bind the state of the button to the command.
-      buttonView.bind('isOn', 'isEnabled').to(command, 'value', 'isEnabled');
-
-      // Execute the command when the button is clicked (executed).
-      this.listenTo(buttonView, 'execute', () => editor.execute('addSlide'));
 
       return buttonView;
     });

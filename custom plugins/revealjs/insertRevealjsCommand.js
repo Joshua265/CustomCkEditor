@@ -1,4 +1,4 @@
-import Command from '@ckeditor/ckeditor5-core/src/command';
+import Command from "@ckeditor/ckeditor5-core/src/command";
 
 export default class InsertRevealjsCommand extends Command {
   execute() {
@@ -14,7 +14,7 @@ export default class InsertRevealjsCommand extends Command {
     const selection = model.document.selection;
     const allowedIn = model.schema.findAllowedParent(
       selection.getFirstPosition(),
-      'RevealJS'
+      "RevealJS"
     );
 
     this.isEnabled = allowedIn !== null;
@@ -22,16 +22,23 @@ export default class InsertRevealjsCommand extends Command {
 }
 
 function createRevealJS(writer) {
-  const RevealJS = writer.createElement('RevealJS');
-  const H = writer.createElement('H');
+  let pages = NaN;
+  do {
+    try {
+      pages = parseInt(window.prompt("How many Slides?"));
+      console.log(pages);
+    } catch (e) {
+      console.log(e);
+      pages = NaN;
+    }
+  } while (isNaN(pages) || pages < 0);
+  const RevealJS = writer.createElement("RevealJS");
 
-  writer.append(H, RevealJS);
-
-  // There must be at least one paragraph for the description to be editable.
-  // See https://github.com/ckeditor/ckeditor5/issues/1464.
-  writer.appendElement('paragraph', H);
-
-  writer.createPositionAfter(H);
+  for (let i = 0; i < pages; i++) {
+    let H = writer.createElement("H");
+    writer.append(H, RevealJS);
+    writer.appendElement("paragraph", H);
+  }
 
   return RevealJS;
 }
