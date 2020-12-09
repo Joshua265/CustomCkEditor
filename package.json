@@ -49,6 +49,7 @@
   "dependencies": {
     "react": "^17.0.1",
     "reveal.js": "^4.1.0",
-    "revealjs-react": "^0.1.0"
+    "revealjs-react": "^0.1.0",
+    "sanitize-html": "^2.2.0"
   }
 }

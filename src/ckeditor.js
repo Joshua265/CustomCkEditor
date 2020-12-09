@@ -27,13 +27,11 @@ import ImageToolbar from "@ckeditor/ckeditor5-image/src/imagetoolbar.js";
 import ImageUpload from "@ckeditor/ckeditor5-image/src/imageupload.js";
 import Indent from "@ckeditor/ckeditor5-indent/src/indent.js";
 import IndentBlock from "@ckeditor/ckeditor5-indent/src/indentblock.js";
-import CKEditorInspector from "@ckeditor/ckeditor5-inspector";
 import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic.js";
 import Link from "@ckeditor/ckeditor5-link/src/link.js";
 import List from "@ckeditor/ckeditor5-list/src/list.js";
 import ListStyle from "@ckeditor/ckeditor5-list/src/liststyle.js";
 import MathType from "@wiris/mathtype-ckeditor5";
-import MediaEmbed from "@ckeditor/ckeditor5-media-embed/src/mediaembed";
 import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph.js";
 import PasteFromOffice from "@ckeditor/ckeditor5-paste-from-office/src/pastefromoffice";
 import SpecialCharacters from "@ckeditor/ckeditor5-special-characters/src/specialcharacters.js";
@@ -51,15 +49,16 @@ import TableToolbar from "@ckeditor/ckeditor5-table/src/tabletoolbar.js";
 import TextTransformation from "@ckeditor/ckeditor5-typing/src/texttransformation.js";
 import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline.js";
 
-import Revealjs from "../custom plugins/revealjs/revealjs";
-import Anchor from "../custom plugins/ckeditor5-anchor-master/src/anchor";
-// import Media from "../custom plugins/ckeditor5-media-master/src/media";
-// import MediaBrowser from "../custom plugins/ckeditor5-media-master/src/mediabrowser";
-// import MediaCaption from "../custom plugins/ckeditor5-media-master/src/mediacaption";
-// import MediaStyle from "../custom plugins/ckeditor5-media-master/src/mediastyle";
-// import MediaToolbar from "../custom plugins/ckeditor5-media-master/src/mediatoolbar";
+import SlideShow from "../custom plugins/SlideShow/SlideShow";
+import Anchor from "../custom plugins/ckeditor5-anchor/src/anchor";
+import Media from "@ckeditor/ckeditor5-media-embed/src/mediaembed";
+import MediaCaption from "../custom plugins/ckeditor5-media/src/mediacaption";
+import MediaStyle from "../custom plugins/ckeditor5-media/src/mediastyle";
+import MediaToolbar from "../custom plugins/ckeditor5-media/src/mediatoolbar";
+import MediaTextAlternative from "../custom plugins/ckeditor5-media/src/mediatextalternative";
+import Hide from "../custom plugins/Hide/Hide";
 
-// const cKEditorInspector = new CKEditorInspector();
+import * as sanitize from "sanitize-html";
 
 class Editor extends ClassicEditor {}
 
@@ -79,6 +78,7 @@ Editor.builtinPlugins = [
   FontFamily,
   FontSize,
   Heading,
+  Hide,
   Highlight,
   HtmlEmbed,
   Image,
@@ -95,15 +95,14 @@ Editor.builtinPlugins = [
   List,
   ListStyle,
   MathType,
-  MediaEmbed,
-  // Media,
-  // MediaBrowser,
-  // MediaToolbar,
-  // MediaCaption,
-  // MediaStyle,
+  Media,
+  MediaCaption,
+  MediaStyle,
+  MediaToolbar,
+  MediaTextAlternative,
   Paragraph,
   PasteFromOffice,
-  Revealjs,
+  SlideShow,
   SpecialCharacters,
   SpecialCharactersArrows,
   SpecialCharactersCurrency,
@@ -130,16 +129,20 @@ Editor.defaultConfig = {
     "bold",
     "italic",
     "link",
+    "anchor",
+    "|",
     "highlight",
     "fontColor",
     "fontFamily",
     "fontSize",
+    "|",
     "numberedList",
     "bulletedList",
     "|",
     "CodeBlock",
     "htmlEmbed",
-    "ImageInsert",
+    "slideshow",
+    "imageInsert",
     "mediaEmbed",
     "|",
     "indent",
@@ -149,55 +152,8 @@ Editor.defaultConfig = {
     "ChemType",
     "SpecialCharacters",
     "insertTable",
-    "|",
-    "Revealjs",
-    "anchor",
-    // "mediaBrowser",
+    "hide",
   ],
-  mediaEmbed: {
-    providers: [
-      {
-        name: "youtube",
-        url: [
-          /^(?:m\.)?youtube\.com\/watch\?v=([\w-]+)/,
-          /^(?:m\.)?youtube\.com\/v\/([\w-]+)/,
-          /^youtube\.com\/embed\/([\w-]+)/,
-          /^youtu\.be\/([\w-]+)/,
-        ],
-        html: (match) => {
-          const id = match[1];
-
-          return (
-            '<div style="position: relative; padding-bottom: 100%; height: 0; padding-bottom: 56.2493%;">' +
-            `<iframe src="https://www.youtube.com/embed/${id}" ` +
-            'style="position: absolute; width: 100%; height: 100%; top: 0; left: 0;" ' +
-            'frameborder="0" allow="autoplay; encrypted-media" allowfullscreen>' +
-            "</iframe>" +
-            "</div>"
-          );
-        },
-      },
-      {
-        name: "falstad",
-        url: /^falstad\.com\/circuit/,
-        html: (match) =>
-          `<iframe href="http://${match.input} title="${match.input}" 
-          src="http://${match.input}}" 
-          style={{ width: "100%", minHeight: "400px" }}></iframe>`,
-      },
-      {
-        name: "geogebra",
-        url: /^geogebra\.org/,
-        html: (match) =>
-          `<iframe title="${match.input}" src="http://${match.input}" height="${
-            getGeogebraStyle(match.input).height
-          }" width="${getGeogebraStyle(match.input).width}"/>`,
-      },
-    ],
-  },
-  mathType: {
-    language: "mathjax",
-  },
   link: {
     decorators: {
       openInNewTab: {
@@ -222,6 +178,9 @@ Editor.defaultConfig = {
       "imageTextAlternative",
     ],
   },
+  hide: {
+    icon: "../custom plugins/Hide/Hide.svg",
+  },
   htmlEmbed: {
     showPreviews: true,
     sanitizeHtml: (inputHtml) => {
@@ -245,9 +204,9 @@ Editor.defaultConfig = {
       "tableCellProperties",
     ],
   },
+  media: {
+    browser: "../mediaBrowser/mediaBrowser.html",
+  },
 };
-
-// comment out in prod build
-// CKEditorInspector.attach(Editor);
 
 export default Editor;
