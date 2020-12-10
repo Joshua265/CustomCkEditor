@@ -49,14 +49,14 @@ import TableToolbar from "@ckeditor/ckeditor5-table/src/tabletoolbar.js";
 import TextTransformation from "@ckeditor/ckeditor5-typing/src/texttransformation.js";
 import Underline from "@ckeditor/ckeditor5-basic-styles/src/underline.js";
 
-import SlideShow from "../custom plugins/SlideShow/SlideShow";
+import SlideShow from "../custom plugins/ckeditor5-SlideShow/SlideShow";
 import Anchor from "../custom plugins/ckeditor5-anchor/src/anchor";
 import Media from "@ckeditor/ckeditor5-media-embed/src/mediaembed";
 import MediaCaption from "../custom plugins/ckeditor5-media/src/mediacaption";
 import MediaStyle from "../custom plugins/ckeditor5-media/src/mediastyle";
 import MediaToolbar from "../custom plugins/ckeditor5-media/src/mediatoolbar";
 import MediaTextAlternative from "../custom plugins/ckeditor5-media/src/mediatextalternative";
-import Hide from "../custom plugins/Hide/Hide";
+import Hide from "../custom plugins/ckeditor5-Hide/Hide";
 
 import * as sanitize from "sanitize-html";
 
@@ -179,7 +179,7 @@ Editor.defaultConfig = {
     ],
   },
   hide: {
-    icon: "../custom plugins/Hide/theme/icons/Hide.svg",
+    icon: "../custom plugins/ckeditor5-Hide/theme/icons/Hide.svg",
   },
   htmlEmbed: {
     showPreviews: true,
