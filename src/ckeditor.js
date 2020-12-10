@@ -179,7 +179,7 @@ Editor.defaultConfig = {
     ],
   },
   hide: {
-    icon: "../custom plugins/Hide/Hide.svg",
+    icon: "../custom plugins/Hide/theme/icons/Hide.svg",
   },
   htmlEmbed: {
     showPreviews: true,

@@ -1,6 +1,6 @@
 import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
-import SlideShowIcon from "./SlideShow.svg";
+import SlideShowIcon from "./theme/icons/SlideShow.svg";
 
 export default class SlideShowUi extends Plugin {
   init() {

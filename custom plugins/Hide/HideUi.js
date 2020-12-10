@@ -1,6 +1,6 @@
 import Plugin from "@ckeditor/ckeditor5-core/src/plugin";
 import ButtonView from "@ckeditor/ckeditor5-ui/src/button/buttonview";
-import HideIcon from "./Hide.svg";
+import HideIcon from "./theme/icons/Hide.svg";
 
 export default class HideUi extends Plugin {
   init() {
