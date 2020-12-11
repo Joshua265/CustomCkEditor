@@ -28,12 +28,13 @@ export default class EditHide extends Plugin {
       allowIn: "$root",
 
       // Allow in places where other blocks are allowed (e.g. directly in the root).
-      allowWhere: "$block",
+      allowWhere: "$text",
+      isInline: true,
     });
 
     schema.register("HideIcon", {
       // Cannot be split or left by the caret.
-      isLimit: true,
+      isObject: true,
 
       allowIn: "Hide",
 
@@ -43,7 +44,7 @@ export default class EditHide extends Plugin {
 
     schema.register("HideHidden", {
       // Cannot be split or left by the caret.
-      isLimit: true,
+      isObject: true,
 
       allowIn: "Hide",
 
@@ -61,25 +62,25 @@ export default class EditHide extends Plugin {
     conversion.for("upcast").elementToElement({
       model: "Hide",
       view: {
-        name: "div",
+        name: "span",
         classes: "Hide",
       },
     });
     conversion.for("dataDowncast").elementToElement({
       model: "Hide",
       view: {
-        name: "div",
+        name: "span",
         classes: "Hide",
       },
     });
     conversion.for("editingDowncast").elementToElement({
       model: "Hide",
       view: (modelElement, { writer: viewWriter }) => {
-        const div = viewWriter.createContainerElement("div", {
+        const span = viewWriter.createContainerElement("span", {
           class: "Hide",
         });
 
-        return toWidget(div, viewWriter, { label: "Hide widget" });
+        return toWidget(span, viewWriter, { label: "Hide widget" });
       },
     });
 
@@ -87,14 +88,14 @@ export default class EditHide extends Plugin {
     conversion.for("upcast").elementToElement({
       model: "HideHidden",
       view: {
-        name: "div",
+        name: "span",
         classes: "hide-hidden",
       },
     });
     conversion.for("dataDowncast").elementToElement({
       model: "HideHidden",
       view: {
-        name: "div",
+        name: "span",
         classes: "hide-hidden",
       },
     });
@@ -102,11 +103,11 @@ export default class EditHide extends Plugin {
       model: "HideHidden",
       view: (modelElement, { writer: viewWriter }) => {
         // Note: You use a more specialized createEditableElement() method here.
-        const section = viewWriter.createEditableElement("div", {
+        const span = viewWriter.createEditableElement("span", {
           class: "hide-hidden",
         });
 
-        return toWidgetEditable(section, viewWriter);
+        return toWidgetEditable(span, viewWriter);
       },
     });
 
